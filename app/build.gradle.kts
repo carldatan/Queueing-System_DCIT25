@@ -26,11 +26,7 @@ dependencies {
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
-    }
-}
+java { toolchain { languageVersion = JavaLanguageVersion.of(21) } }
 
 application {
     // Define the main class for the application.
@@ -40,4 +36,27 @@ application {
 tasks.named<Test>("test") {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
+}
+
+tasks.register<Exec>("createExe") {
+    dependsOn("installDist") // Make sure the app is built
+
+    val outputDir = rootDir
+    val jarPath = "${buildDir}/libs/${project.name}-$version.jar"
+
+    commandLine(
+            "jpackage",
+            "--input",
+            "${buildDir}/libs",
+            "--name",
+            "MyApp",
+            "--main-jar",
+            "${project.name}-$version.jar",
+            "--main-class",
+            "com.mds.app.App", // <-- Adjust as needed
+            "--type",
+            "exe",
+            "--dest",
+            outputDir
+    )
 }
