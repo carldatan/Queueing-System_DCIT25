@@ -56,6 +56,7 @@ public class App {
             String s = controlFrame.popQueue(queue, controlPanel);
             mainFrame.removeLabel(panel);
             nextCustomer.customerToBeServed.setText("Next Customer: " + s);
+            nextCustomer.timeRemaining.set(30);
             mainFrame.repaint();
             mainFrame.revalidate();
 
