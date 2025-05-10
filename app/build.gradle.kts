@@ -38,25 +38,9 @@ tasks.named<Test>("test") {
     useJUnitPlatform()
 }
 
-tasks.register<Exec>("createExe") {
-    dependsOn("installDist") // Make sure the app is built
-
-    val outputDir = rootDir
-    val jarPath = "${buildDir}/libs/${project.name}-$version.jar"
-
-    commandLine(
-            "jpackage",
-            "--input",
-            "${buildDir}/libs",
-            "--name",
-            "MyApp",
-            "--main-jar",
-            "${project.name}-$version.jar",
-            "--main-class",
-            "com.mds.app.App", // <-- Adjust as needed
-            "--type",
-            "exe",
-            "--dest",
-            outputDir
-    )
+tasks.jar{
+    manifest{
+        attributes["Main-Class"] = "com.mds.app.App"
+    }
 }
+
