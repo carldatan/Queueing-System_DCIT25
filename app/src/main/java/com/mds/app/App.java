@@ -10,8 +10,6 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.util.LinkedList;
-import java.util.concurrent.Flow;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.*;
 
@@ -37,7 +35,6 @@ public class App {
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
-        int totalWidth = mainFrame.getWidth() + controlFrame.getWidth();
         int gap = 20;
         int x = 0;
         int y = (screenSize.height - mainFrame.getHeight()) / 2;
@@ -49,27 +46,17 @@ public class App {
         buttonPanel.add(removeBtn);
 
         NextToBeServedTimer nextCustomer = new NextToBeServedTimer(queue);
-        AtomicBoolean isCustomerSet = new AtomicBoolean(false);
         mainFrame.add(nextCustomer, BorderLayout.PAGE_START);
         mainFrame.revalidate();
         removeBtn.addActionListener(e -> {
             String s = controlFrame.popQueue(queue, controlPanel);
             mainFrame.removeLabel(panel);
-            nextCustomer.customerToBeServed.setText("Next Customer: " + s);
-            nextCustomer.timeRemaining.set(30);
+            nextCustomer.setCustomerToBeServed(s);
             mainFrame.repaint();
             mainFrame.revalidate();
 
         });
 
-        JLabel customerToBeServed = new JLabel();
-
-        JLabel placeholder = new JLabel("Next Customer!");
-        placeholder.setFont(new Font("Arial", Font.BOLD, 40));
-        placeholder.setBounds(0, -10, 1280, 400);
-
-        // mainFrame.add(placeholder, BorderLayout.PAGE_START);
-        // mainFrame.add(new NextToBeServedTimer(queue), BorderLayout.PAGE_START);
         mainFrame.add(panel, BorderLayout.PAGE_END);
 
         addBtn.addActionListener(e -> {
