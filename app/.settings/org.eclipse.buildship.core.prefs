@@ -1,11 +1,11 @@
-arguments=--init-script /home/def4ult/.cache/jdtls/config/org.eclipse.osgi/438/0/.cp/gradle/init/init.gradle
+arguments=--init-script /home/john/.cache/jdtls/config/org.eclipse.osgi/58/0/.cp/gradle/init/init.gradle
 auto.sync=false
 build.scans.enabled=false
-connection.gradle.distribution=GRADLE_DISTRIBUTION(LOCAL_INSTALLATION(/home/def4ult/.sdkman/candidates/gradle/current))
+connection.gradle.distribution=GRADLE_DISTRIBUTION(LOCAL_INSTALLATION(/home/john/.sdkman/candidates/gradle/current))
 connection.project.dir=
 eclipse.preferences.version=1
 gradle.user.home=
-java.home=/usr/lib/jvm/java-21-openjdk-amd64
+java.home=/usr/lib/jvm/java-21-openjdk
 jvm.arguments=
 offline.mode=false
 override.workspace.settings=true

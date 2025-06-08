@@ -10,59 +10,96 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.util.LinkedList;
+import java.awt.*;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
 public class App {
 
-    public static void main(String[] args) {
-        LinkedList<Integer> queue = new LinkedList<>();
-        Frame mainFrame = new Frame();
-        Panel panel = new Panel(mainFrame);
-        JPanel buttonPanel = new JPanel();
+	public static void main(String[] args) {
+		LinkedList<Integer> queue = new LinkedList<>();
+		Frame mainFrame = new Frame("Main Panel");
+		Panel panel = new Panel(mainFrame);
+		JPanel buttonPanel = new JPanel();
 
-        buttonPanel.setBackground(Color.WHITE);
-        buttonPanel.setSize(1280, 250);
-        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 20));
+		buttonPanel.setBackground(Color.WHITE);
+		buttonPanel.setSize(1280, 250);
+		buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 20));
 
-        Frame controlFrame = new Frame();
-        Panel controlPanel = new Panel(controlFrame);
-        controlFrame.add(controlPanel, BorderLayout.CENTER);
-        JButton addBtn = new JButton("add");
-        JButton removeBtn = new JButton("next");
-        addBtn.setFont(new Font("Arial", Font.BOLD, 40));
-        removeBtn.setFont(new Font("Arial", Font.BOLD, 40));
+		Frame controlFrame = new Frame("Control Panel");
+		Panel controlPanel = new Panel(controlFrame);
+		controlFrame.add(controlPanel, BorderLayout.CENTER);
+		JButton addBtn = new JButton("add");
+		JButton removeBtn = new JButton("next");
+		addBtn.setFont(new Font("Arial", Font.BOLD, 40));
+		removeBtn.setFont(new Font("Arial", Font.BOLD, 40));
 
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
-        int gap = 20;
-        int x = 0;
-        int y = (screenSize.height - mainFrame.getHeight()) / 2;
-        mainFrame.setLocation(x, y);
-        controlFrame.setLocation(x + mainFrame.getWidth() + gap, y);
+		int gap = 20;
+		int x = 0;
+		int y = (screenSize.height - mainFrame.getHeight()) / 2;
+		mainFrame.setLocation(x, y);
+		controlFrame.setLocation(x + mainFrame.getWidth() + gap, y);
 
-        controlFrame.add(buttonPanel, BorderLayout.PAGE_END);
-        buttonPanel.add(addBtn);
-        buttonPanel.add(removeBtn);
+		controlFrame.add(buttonPanel, BorderLayout.PAGE_END);
+		buttonPanel.add(addBtn);
+		buttonPanel.add(removeBtn);
 
-        NextToBeServedTimer nextCustomer = new NextToBeServedTimer(queue);
-        mainFrame.add(nextCustomer, BorderLayout.PAGE_START);
-        mainFrame.revalidate();
-        removeBtn.addActionListener(e -> {
-            String s = controlFrame.popQueue(queue, controlPanel);
-            mainFrame.removeLabel(panel);
-            nextCustomer.setCustomerToBeServed(s);
-            mainFrame.repaint();
-            mainFrame.revalidate();
+		NextToBeServedTimer nextCustomer = new NextToBeServedTimer(queue);
+		JPanel header = new JPanel();
+		header.setPreferredSize(new Dimension(0, 70));
+		header.setBackground(Color.GREEN);
+		mainFrame.add(header, BorderLayout.NORTH);
 
-        });
+		JPanel logoContainer = new JPanel() {
 
-        mainFrame.add(panel, BorderLayout.PAGE_END);
+			private Image logo = Toolkit.getDefaultToolkit()
+					.getImage("../../../../../../../logo.jpg");
 
-        addBtn.addActionListener(e -> {
-            mainFrame.addQueue(queue, panel);
-            controlFrame.updatePanel(queue, controlPanel);
-        });
+			@Override
+			protected void paintComponent(Graphics g) {
+				super.paintComponent(g);
+				g.drawImage(logo, 0, 0, null);
+			}
 
-    }
+		};
+		header.repaint();
+
+		JLabel next = new JLabel("Now Serving");
+		next.setBorder(new EmptyBorder(10, 20, 10, 20));
+		next.setFont(new Font("Arial", Font.BOLD, 60));
+
+		// mainFrame.add(nextCustomer, BorderLayout.WEST);
+
+		mainFrame.add(panel, BorderLayout.CENTER);
+		JPanel nextPanel = new JPanel();
+		JPanel nextContainer = new JPanel();
+		nextContainer.setPreferredSize(new Dimension(420, 420));
+		nextPanel.setBackground(Color.gray);
+		nextPanel.add(next);
+		panel.add(nextPanel);
+		nextPanel.add(nextContainer);
+		JPanel queuePanel = new JPanel();
+		panel.add(queuePanel);
+		nextContainer.add(nextCustomer);
+
+		mainFrame.revalidate();
+		mainFrame.repaint();
+		removeBtn.addActionListener(e -> {
+			String s = controlFrame.popQueue(queue, controlPanel);
+			mainFrame.removeLabel(queuePanel);
+			nextCustomer.setCustomerToBeServed(s);
+			mainFrame.repaint();
+			mainFrame.revalidate();
+
+		});
+
+		addBtn.addActionListener(e -> {
+			mainFrame.addQueue(queue, queuePanel);
+			controlFrame.updatePanel(queue, controlPanel);
+		});
+
+	}
 }
