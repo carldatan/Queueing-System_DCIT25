@@ -9,11 +9,15 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.LinkedList;
 import java.awt.*;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 
 public class App {
 
@@ -28,12 +32,13 @@ public class App {
 		buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 20));
 
 		Frame controlFrame = new Frame("Control Panel");
-		Panel controlPanel = new Panel(controlFrame);
-		controlFrame.add(controlPanel, BorderLayout.CENTER);
+		JPanel controlQueue = new JPanel();
 		JButton addBtn = new JButton("add");
 		JButton removeBtn = new JButton("next");
+		JButton closeBtn = new JButton("close");
 		addBtn.setFont(new Font("Arial", Font.BOLD, 40));
 		removeBtn.setFont(new Font("Arial", Font.BOLD, 40));
+		closeBtn.setFont(new Font("Arial", Font.BOLD, 40));
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
@@ -43,54 +48,62 @@ public class App {
 		mainFrame.setLocation(x, y);
 		controlFrame.setLocation(x + mainFrame.getWidth() + gap, y);
 
-		controlFrame.add(buttonPanel, BorderLayout.PAGE_END);
 		buttonPanel.add(addBtn);
 		buttonPanel.add(removeBtn);
+		buttonPanel.add(closeBtn);
 
-		NextToBeServedTimer nextCustomer = new NextToBeServedTimer(queue);
+		closeBtn.addActionListener(e -> {
+			int response = JOptionPane.showConfirmDialog(null, "Are you sure you want to exit?", "Exit?",
+					JOptionPane.YES_NO_OPTION);
+
+			if (response == JOptionPane.YES_OPTION) {
+				System.exit(0);
+			}
+		});
+
+		Panel controlPanel = new Panel(controlFrame);
+		NextPanel nextControl = new NextPanel();
+		nextControl.add(nextControl.nextCustomer.time);
+		controlPanel.add(nextControl);
+		controlPanel.add(controlQueue);
+		controlFrame.add(buttonPanel, BorderLayout.PAGE_END);
+		controlFrame.add(controlPanel, BorderLayout.CENTER);
+
+		NextToBeServedTimer nextCustomerMain = new NextToBeServedTimer();
+		nextCustomerMain.time.setVisible(false);
 		JPanel header = new JPanel();
 		header.setPreferredSize(new Dimension(0, 70));
-		header.setBackground(Color.GREEN);
+		header.setBackground(new Color(0x057523));
+		header.setLayout(new BorderLayout());
+		header.setBorder(BorderFactory.createRaisedSoftBevelBorder());
 		mainFrame.add(header, BorderLayout.NORTH);
 
-		JPanel logoContainer = new JPanel() {
-
-			private Image logo = Toolkit.getDefaultToolkit()
-					.getImage("../../../../../../../logo.jpg");
-
-			@Override
-			protected void paintComponent(Graphics g) {
-				super.paintComponent(g);
-				g.drawImage(logo, 0, 0, null);
-			}
-
-		};
+		JLabel title = new JLabel("Queueing System");
+		title.setFont(new Font("Arial", Font.BOLD, 30));
+		title.setForeground(Color.WHITE);
+		title.setBorder(new EmptyBorder(5, 5, 5, 5));
+		header.add(title, BorderLayout.EAST);
 		header.repaint();
 
 		JLabel next = new JLabel("Now Serving");
 		next.setBorder(new EmptyBorder(10, 20, 10, 20));
 		next.setFont(new Font("Arial", Font.BOLD, 60));
 
-		// mainFrame.add(nextCustomer, BorderLayout.WEST);
+		// mainFrame.add(nextCustomerMain, BorderLayout.WEST);
 
-		mainFrame.add(panel, BorderLayout.CENTER);
-		JPanel nextPanel = new JPanel();
-		JPanel nextContainer = new JPanel();
-		nextContainer.setPreferredSize(new Dimension(420, 420));
-		nextPanel.setBackground(Color.gray);
-		nextPanel.add(next);
+		NextPanel nextPanel = new NextPanel();
 		panel.add(nextPanel);
-		nextPanel.add(nextContainer);
 		JPanel queuePanel = new JPanel();
 		panel.add(queuePanel);
-		nextContainer.add(nextCustomer);
+		mainFrame.add(panel, BorderLayout.CENTER);
 
 		mainFrame.revalidate();
 		mainFrame.repaint();
 		removeBtn.addActionListener(e -> {
-			String s = controlFrame.popQueue(queue, controlPanel);
+			String s = controlFrame.popQueue(queue, controlQueue);
 			mainFrame.removeLabel(queuePanel);
-			nextCustomer.setCustomerToBeServed(s);
+			nextPanel.nextCustomer.setCustomerToBeServed(s);
+			nextControl.nextCustomer.setCustomerToBeServed(s);
 			mainFrame.repaint();
 			mainFrame.revalidate();
 
@@ -98,7 +111,7 @@ public class App {
 
 		addBtn.addActionListener(e -> {
 			mainFrame.addQueue(queue, queuePanel);
-			controlFrame.updatePanel(queue, controlPanel);
+			controlFrame.updatePanel(queue, controlQueue);
 		});
 
 	}

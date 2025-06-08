@@ -2,8 +2,6 @@ package com.mds.app;
 
 import java.awt.*;
 import javax.swing.*;
-import java.awt.event.*;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -40,7 +38,7 @@ public class Frame extends JFrame {
 
 		JLabel label = new JLabel(String.valueOf(queue.peekLast()));
 		label.setForeground(Color.WHITE);
-		label.setFont(new Font("Arial", Font.BOLD, 40));
+		label.setFont(new Font("Arial", Font.BOLD, 60));
 		label.setBackground(new Color(0x050505));
 		label.setOpaque(true);
 		panel.add(label);

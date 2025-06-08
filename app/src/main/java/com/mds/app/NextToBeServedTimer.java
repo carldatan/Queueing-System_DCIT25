@@ -11,14 +11,18 @@ import javax.swing.Timer;
 
 public class NextToBeServedTimer extends JPanel {
 	JLabel customerToBeServed;
-	LinkedList<Integer> queue;
 	private int timeRemaining;
 	private Timer timer;
+	private int seconds;
+	private int minutes;
+	JLabel time;
 
-	NextToBeServedTimer(LinkedList<Integer> queue) {
-		this.setBounds(0, -10, 1280, 400);
-		this.setLayout(new FlowLayout());
-		timeRemaining = 30;
+	NextToBeServedTimer() {
+		// this.setBounds(0, -10, 1280, 400);
+		this.setLayout(new GridLayout(2, 1));
+
+		time = new JLabel();
+		time.setFont(new Font("Arial", Font.BOLD, 100));
 
 		customerToBeServed = new JLabel();
 		customerToBeServed.setFont(new Font("Arial", Font.BOLD, 150));
@@ -26,26 +30,40 @@ public class NextToBeServedTimer extends JPanel {
 		timer = new Timer(1000, new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+
 				if (timeRemaining == 0) {
 					customerToBeServed.setText("");
+					time.setVisible(false);
 					timer.stop();
 				} else {
+					minutes = timeRemaining / 60;
+					seconds = timeRemaining % 60;
+					String seconds_string = String.format("%02d", seconds);
+					String minutes_string = String.format("%02d", minutes);
+					time.setText(minutes_string + ":" + seconds_string);
 					timeRemaining--;
 				}
 			}
 		});
 
-		timer.start();
 		this.add(customerToBeServed);
 	}
 
 	public void setCustomerToBeServed(String customer) {
 		if (timer.isRunning())
 			timer.stop();
+		if (customer == "") {
+			timer.stop();
+			return;
+		}
 
 		customerToBeServed.setText(customer);
-		timeRemaining = 30;
+		timeRemaining = 180;
 		timer.start();
+	}
+
+	public void showTimer() {
+		time.setVisible(true);
 	}
 
 }
