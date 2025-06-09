@@ -37,12 +37,8 @@ public class NextToBeServedTimer extends JPanel {
 					time.setVisible(false);
 					timer.stop();
 				} else {
-					minutes = timeRemaining / 60;
-					seconds = timeRemaining % 60;
-					seconds_string = String.format("%02d", seconds);
-					minutes_string = String.format("%02d", minutes);
-					time.setText(minutes_string + ":" + seconds_string);
 					timeRemaining--;
+					updateTimeLabel();
 				}
 			}
 		});
@@ -59,10 +55,19 @@ public class NextToBeServedTimer extends JPanel {
 			return;
 		}
 
-		customerToBeServed.setText(customer);
-		time.setVisible(true);
 		timeRemaining = 180;
+		customerToBeServed.setText(customer);
+		updateTimeLabel();
 		timer.start();
+		time.setVisible(true);
+	}
+
+	private void updateTimeLabel() {
+		minutes = timeRemaining / 60;
+		seconds = timeRemaining % 60;
+		seconds_string = String.format("%02d", seconds);
+		minutes_string = String.format("%02d", minutes);
+		time.setText(minutes_string + ":" + seconds_string);
 	}
 
 }
