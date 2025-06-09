@@ -24,11 +24,6 @@ public class NextToBeServedTimer extends JPanel {
 
 		time = new JLabel();
 		time.setFont(new Font("Arial", Font.BOLD, 100));
-		minutes = timeRemaining / 60;
-		seconds = timeRemaining % 60;
-		seconds_string = String.format("%02d", seconds);
-		minutes_string = String.format("%02d", minutes);
-		time.setText(minutes_string + ":" + seconds_string);
 
 		customerToBeServed = new JLabel();
 		customerToBeServed.setFont(new Font("Arial", Font.BOLD, 150));
