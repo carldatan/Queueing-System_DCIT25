@@ -3,7 +3,6 @@ package com.mds.app;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.LinkedList;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -15,6 +14,8 @@ public class NextToBeServedTimer extends JPanel {
 	private Timer timer;
 	private int seconds;
 	private int minutes;
+	String seconds_string;
+	String minutes_string;
 	JLabel time;
 
 	NextToBeServedTimer() {
@@ -23,6 +24,11 @@ public class NextToBeServedTimer extends JPanel {
 
 		time = new JLabel();
 		time.setFont(new Font("Arial", Font.BOLD, 100));
+		minutes = timeRemaining / 60;
+		seconds = timeRemaining % 60;
+		seconds_string = String.format("%02d", seconds);
+		minutes_string = String.format("%02d", minutes);
+		time.setText(minutes_string + ":" + seconds_string);
 
 		customerToBeServed = new JLabel();
 		customerToBeServed.setFont(new Font("Arial", Font.BOLD, 150));
@@ -38,8 +44,8 @@ public class NextToBeServedTimer extends JPanel {
 				} else {
 					minutes = timeRemaining / 60;
 					seconds = timeRemaining % 60;
-					String seconds_string = String.format("%02d", seconds);
-					String minutes_string = String.format("%02d", minutes);
+					seconds_string = String.format("%02d", seconds);
+					minutes_string = String.format("%02d", minutes);
 					time.setText(minutes_string + ":" + seconds_string);
 					timeRemaining--;
 				}
@@ -53,17 +59,15 @@ public class NextToBeServedTimer extends JPanel {
 		if (timer.isRunning())
 			timer.stop();
 		if (customer == "") {
-			timer.stop();
+			customerToBeServed.setText(customer);
+			time.setVisible(false);
 			return;
 		}
 
 		customerToBeServed.setText(customer);
+		time.setVisible(true);
 		timeRemaining = 180;
 		timer.start();
-	}
-
-	public void showTimer() {
-		time.setVisible(true);
 	}
 
 }

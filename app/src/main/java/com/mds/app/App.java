@@ -9,15 +9,10 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Toolkit;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.LinkedList;
-import java.awt.*;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
 
 public class App {
 
@@ -63,7 +58,6 @@ public class App {
 
 		Panel controlPanel = new Panel(controlFrame);
 		NextPanel nextControl = new NextPanel();
-		nextControl.add(nextControl.nextCustomer.time);
 		controlPanel.add(nextControl);
 		controlPanel.add(controlQueue);
 		controlFrame.add(buttonPanel, BorderLayout.PAGE_END);
@@ -104,6 +98,7 @@ public class App {
 			mainFrame.removeLabel(queuePanel);
 			nextPanel.nextCustomer.setCustomerToBeServed(s);
 			nextControl.nextCustomer.setCustomerToBeServed(s);
+			nextControl.add(nextControl.nextCustomer.time);
 			mainFrame.repaint();
 			mainFrame.revalidate();
 
